@@ -2,8 +2,8 @@
 
 namespace Illuminate\Foundation\Console;
 
-use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 class ListenerMakeCommand extends GeneratorCommand
@@ -52,7 +52,7 @@ class ListenerMakeCommand extends GeneratorCommand
         );
 
         return str_replace(
-            'DummyFullEvent', trim($event, '\\'), $stub
+            'DummyFullEvent', $event, $stub
         );
     }
 

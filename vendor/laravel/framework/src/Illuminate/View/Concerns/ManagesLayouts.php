@@ -2,8 +2,8 @@
 
 namespace Illuminate\View\Concerns;
 
-use Illuminate\Contracts\View\View;
 use InvalidArgumentException;
+use Illuminate\Contracts\View\View;
 
 trait ManagesLayouts
 {
@@ -186,21 +186,10 @@ trait ManagesLayouts
     }
 
     /**
-     * Check if section does not exist.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    public function sectionMissing($name)
-    {
-        return ! $this->hasSection($name);
-    }
-
-    /**
      * Get the contents of a section.
      *
      * @param  string  $name
-     * @param  string|null  $default
+     * @param  string  $default
      * @return mixed
      */
     public function getSection($name, $default = null)

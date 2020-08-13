@@ -4,8 +4,8 @@ namespace Illuminate\Support\Facades;
 
 use Closure;
 use Mockery;
-use Mockery\MockInterface;
 use RuntimeException;
+use Mockery\MockInterface;
 
 abstract class Facade
 {
@@ -31,13 +31,7 @@ abstract class Facade
      */
     public static function resolved(Closure $callback)
     {
-        $accessor = static::getFacadeAccessor();
-
-        if (static::$app->resolved($accessor) === true) {
-            $callback(static::getFacadeRoot());
-        }
-
-        static::$app->afterResolving($accessor, function ($service) use ($callback) {
+        static::$app->afterResolving(static::getFacadeAccessor(), function ($service) use ($callback) {
             $callback($service);
         });
     }
@@ -59,22 +53,6 @@ abstract class Facade
     }
 
     /**
-     * Initiate a partial mock on the facade.
-     *
-     * @return \Mockery\MockInterface
-     */
-    public static function partialMock()
-    {
-        $name = static::getFacadeAccessor();
-
-        $mock = static::isMock()
-            ? static::$resolvedInstance[$name]
-            : static::createFreshMockInstance();
-
-        return $mock->makePartial();
-    }
-
-    /**
      * Initiate a mock expectation on the facade.
      *
      * @return \Mockery\Expectation
@@ -93,7 +71,7 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @return \Mockery\MockInterface
+     * @return \Mockery\Expectation
      */
     protected static function createFreshMockInstance()
     {
@@ -181,7 +159,7 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param  object|string  $name
+     * @param  string|object  $name
      * @return mixed
      */
     protected static function resolveFacadeInstance($name)
@@ -194,9 +172,7 @@ abstract class Facade
             return static::$resolvedInstance[$name];
         }
 
-        if (static::$app) {
-            return static::$resolvedInstance[$name] = static::$app[$name];
-        }
+        return static::$resolvedInstance[$name] = static::$app[$name];
     }
 
     /**
@@ -245,7 +221,7 @@ abstract class Facade
      * Handle dynamic, static calls to the object.
      *
      * @param  string  $method
-     * @param  array  $args
+     * @param  array   $args
      * @return mixed
      *
      * @throws \RuntimeException

@@ -2,15 +2,15 @@
 
 namespace Illuminate\View;
 
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\View\Factory as FactoryContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\View\Engines\EngineResolver;
 use InvalidArgumentException;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\View\Factory as FactoryContract;
 
 class Factory implements FactoryContract
 {
@@ -66,7 +66,6 @@ class Factory implements FactoryContract
         'blade.php' => 'blade',
         'php' => 'php',
         'css' => 'file',
-        'html' => 'file',
     ];
 
     /**
@@ -82,13 +81,6 @@ class Factory implements FactoryContract
      * @var int
      */
     protected $renderCount = 0;
-
-    /**
-     * The "once" block IDs that have been rendered.
-     *
-     * @var array
-     */
-    protected $renderedOnce = [];
 
     /**
      * Create a new view factory instance.
@@ -111,8 +103,8 @@ class Factory implements FactoryContract
      * Get the evaluated view contents for the given view.
      *
      * @param  string  $path
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @param  array  $mergeData
+     * @param  \Illuminate\Contracts\Support\Arrayable|array   $data
+     * @param  array   $mergeData
      * @return \Illuminate\Contracts\View\View
      */
     public function file($path, $data = [], $mergeData = [])
@@ -128,8 +120,8 @@ class Factory implements FactoryContract
      * Get the evaluated view contents for the given view.
      *
      * @param  string  $view
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @param  array  $mergeData
+     * @param  \Illuminate\Contracts\Support\Arrayable|array   $data
+     * @param  array   $mergeData
      * @return \Illuminate\Contracts\View\View
      */
     public function make($view, $data = [], $mergeData = [])
@@ -152,8 +144,8 @@ class Factory implements FactoryContract
      * Get the first view that actually exists from the given list.
      *
      * @param  array  $views
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @param  array  $mergeData
+     * @param  \Illuminate\Contracts\Support\Arrayable|array   $data
+     * @param  array   $mergeData
      * @return \Illuminate\Contracts\View\View
      *
      * @throws \InvalidArgumentException
@@ -176,8 +168,8 @@ class Factory implements FactoryContract
      *
      * @param  bool  $condition
      * @param  string  $view
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @param  array  $mergeData
+     * @param  \Illuminate\Contracts\Support\Arrayable|array   $data
+     * @param  array   $mergeData
      * @return string
      */
     public function renderWhen($condition, $view, $data = [], $mergeData = [])
@@ -193,7 +185,7 @@ class Factory implements FactoryContract
      * Get the rendered contents of a partial from a loop.
      *
      * @param  string  $view
-     * @param  array  $data
+     * @param  array   $data
      * @param  string  $iterator
      * @param  string  $empty
      * @return string
@@ -228,7 +220,7 @@ class Factory implements FactoryContract
     /**
      * Normalize a view name.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function normalizeName($name)
@@ -288,7 +280,7 @@ class Factory implements FactoryContract
     public function getEngineFromPath($path)
     {
         if (! $extension = $this->getExtension($path)) {
-            throw new InvalidArgumentException("Unrecognized extension in file: {$path}.");
+            throw new InvalidArgumentException("Unrecognized extension in file: {$path}");
         }
 
         $engine = $this->extensions[$extension];
@@ -300,7 +292,7 @@ class Factory implements FactoryContract
      * Get the extension used by the view file.
      *
      * @param  string  $path
-     * @return string|null
+     * @return string
      */
     protected function getExtension($path)
     {
@@ -315,7 +307,7 @@ class Factory implements FactoryContract
      * Add a piece of shared data to the environment.
      *
      * @param  array|string  $key
-     * @param  mixed|null  $value
+     * @param  mixed  $value
      * @return mixed
      */
     public function share($key, $value = null)
@@ -357,28 +349,6 @@ class Factory implements FactoryContract
     public function doneRendering()
     {
         return $this->renderCount == 0;
-    }
-
-    /**
-     * Determine if the given once token has been rendered.
-     *
-     * @param  string  $id
-     * @return bool
-     */
-    public function hasRenderedOnce(string $id)
-    {
-        return isset($this->renderedOnce[$id]);
-    }
-
-    /**
-     * Mark the given once token as having been rendered.
-     *
-     * @param  string  $id
-     * @return void
-     */
-    public function markAsRenderedOnce(string $id)
-    {
-        $this->renderedOnce[$id] = true;
     }
 
     /**
@@ -437,9 +407,9 @@ class Factory implements FactoryContract
     /**
      * Register a valid view extension and its engine.
      *
-     * @param  string  $extension
-     * @param  string  $engine
-     * @param  \Closure|null  $resolver
+     * @param  string    $extension
+     * @param  string    $engine
+     * @param  \Closure  $resolver
      * @return void
      */
     public function addExtension($extension, $engine, $resolver = null)
@@ -463,7 +433,6 @@ class Factory implements FactoryContract
     public function flushState()
     {
         $this->renderCount = 0;
-        $this->renderedOnce = [];
 
         $this->flushSections();
         $this->flushStacks();
@@ -578,7 +547,7 @@ class Factory implements FactoryContract
      * Get an item from the shared data.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  mixed   $default
      * @return mixed
      */
     public function shared($key, $default = null)

@@ -32,9 +32,9 @@ interface Mailer
     /**
      * Send a new message using a view.
      *
-     * @param  \Illuminate\Contracts\Mail\Mailable|string|array  $view
+     * @param  string|array|\Illuminate\Contracts\Mail\Mailable  $view
      * @param  array  $data
-     * @param  \Closure|string|null  $callback
+     * @param  \Closure|string  $callback
      * @return void
      */
     public function send($view, array $data = [], $callback = null);
