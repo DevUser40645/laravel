@@ -58,7 +58,13 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
-		dd(__METHOD__);
+//		$item = BlogCategory::find($id);
+//		$item = BlogCategory::where('id', '<=>', $id)->first();
+//		$item = BlogCategory::where('id', $id)->get(); // get collection
+		$item = BlogCategory::findOrFail($id);
+		$categoryList = BlogCategory::all();
+		
+		return view('blog.admin.category.edit',compact('item', 'categoryList'));
     }
 
     /**
@@ -70,7 +76,23 @@ class CategoryController extends BaseController
      */
     public function update(Request $request, $id)
     {
-		dd(__METHOD__);
+		$item = BlogCategory::find($id);
+		if(empty($item)){
+			return back()
+				->withErrord(['msg' => 'Post id=[{$id}] is not defined'])
+				->withInput();
+		}
+		$data = $request->all();
+		$result = $item->fill($data)->save();
+		if($result){
+			return redirect()
+				->route('blog.admin.category.edit', $item->id)
+				->with(['success' => 'Saved successfully']);
+		}else{
+			return back()
+				->withErrord(['msg' => 'Save error'])
+				->withInput();
+		}
     }
 //	/**
 //	 * Remove the specified resource from storage.
