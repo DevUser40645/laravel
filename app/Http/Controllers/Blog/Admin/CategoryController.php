@@ -16,7 +16,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $paginator = BlogCategory::paginate(5);
-        return view('blog.admin.category.index', compact('paginator'));
+        return view('blog.admin.categories.index', compact('paginator'));
     }
 
     /**
@@ -64,7 +64,7 @@ class CategoryController extends BaseController
 		$item = BlogCategory::findOrFail($id);
 		$categoryList = BlogCategory::all();
 		
-		return view('blog.admin.category.edit',compact('item', 'categoryList'));
+		return view('blog.admin.categories.edit',compact('item', 'categoryList'));
     }
 
     /**
@@ -86,7 +86,7 @@ class CategoryController extends BaseController
 		$result = $item->fill($data)->save();
 		if($result){
 			return redirect()
-				->route('blog.admin.category.edit', $item->id)
+				->route('blog.admin.categories.edit', $item->id)
 				->with(['success' => 'Saved successfully']);
 		}else{
 			return back()
