@@ -46,7 +46,7 @@
                             <div class="form-group">
                                 <lable for="description">Description</lable>
                                 <textarea name="description" id="description" class="form-control" rows="3">
-                                    {{ $item->description }}
+                                    {{ old('description', $item->description) }}
                                 </textarea>
                             </div>
                         </div>

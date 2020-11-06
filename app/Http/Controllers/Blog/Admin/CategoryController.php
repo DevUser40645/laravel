@@ -79,10 +79,11 @@ class CategoryController extends BaseController
 		$item = BlogCategory::find($id);
 		if(empty($item)){
 			return back()
-				->withErrord(['msg' => 'Post id=[{$id}] is not defined'])
+				->withErrors(['msg' => "Post id=[{$id}] is not defined"])
 				->withInput();
 		}
 		$data = $request->all();
+		dd(__METHOD__);
 		$result = $item->fill($data)->save();
 		if($result){
 			return redirect()
@@ -90,7 +91,7 @@ class CategoryController extends BaseController
 				->with(['success' => 'Saved successfully']);
 		}else{
 			return back()
-				->withErrord(['msg' => 'Save error'])
+				->withErrors(['msg' => 'Save error'])
 				->withInput();
 		}
     }

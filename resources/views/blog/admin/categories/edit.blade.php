@@ -10,8 +10,7 @@
                 @include('blog.admin.categories.includes.item_edit_main_col')
             </div>
             <div class="col-md-3">
-                @include('blog.admin.categories
-.includes.item_edit_add_col')
+                @include('blog.admin.categories.includes.item_edit_add_col')
             </div>
         </div>
     </div>
