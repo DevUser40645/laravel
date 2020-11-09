@@ -24,13 +24,13 @@
                                 required>
                             </div>
                             <div class="form-group">
-                                <lable for="slug">Identity</lable>
-                                <input type="text" name="slug" value="{{ $item->title }}"
+                                <lable for="slug">Slug</lable>
+                                <input type="text" name="slug" value="{{ $item->slug }}"
                                        id="slug"
                                        class="form-control">
                             </div>
                             <div class="form-group">
-                                <lable for="parent_id">Identity</lable>
+                                <lable for="parent_id">Parent category</lable>
                                 <select name="parent_id"
                                         id="parent_id"
                                         class="form-control"

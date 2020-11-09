@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Blog\Admin\BaseController;
 use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Models\BlogCategory;
-use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends BaseController
 {
@@ -17,8 +16,9 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginator = BlogCategory::paginate(5);
-        return view('blog.admin.categories.index', compact('paginator'));
+        $paginator = BlogCategory::paginate(15);
+        return view('blog.admin.categories.index',
+            compact('paginator'));
     }
 
     /**
@@ -28,7 +28,11 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-		dd(__METHOD__);
+		$item = new BlogCategory();
+		$categoryList = BlogCategory::all();
+
+        return view('blog.admin.categories.edit',
+            compact('item', 'categoryList'));
     }
 
     /**
@@ -37,9 +41,28 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCategoryCreateRequest $request)
     {
-		dd(__METHOD__);
+        $data = $request->input();
+        if (empty($data['slug'])) {
+            $data['slug'] = str_slug($data['title'], '-');
+        }
+
+        // создаст объект, но не добавит в бд - 1 способ
+//        $item = new BlogCategory($data);
+//		$item->save(); // добавит в бд; в переменной будет true/false
+
+        // создаст объект и добавит в бд - 2 способ
+        $item = (new BlogCategory())->create($data); // в переменной будет объект/false
+
+		if($item){
+		    return redirect()->route('blog.admin.categories.edit', [$item->id])
+                ->with(['success' => 'Saved successfully']);
+        }else{
+            return back()
+                ->withErrors(['msg' => 'Save error'])
+                ->withInput();
+    }
     }
 	
 //	/**
@@ -95,16 +118,19 @@ class CategoryController extends BaseController
 //        $validateedData[] = $validator->fails(); // true\false
 //        dd($validateedData);
 
-
-
 		$item = BlogCategory::find($id);
+
 		if(empty($item)){
 			return back()
 				->withErrors(['msg' => "Post id=[{$id}] is not defined"])
 				->withInput();
 		}
 		$data = $request->all();
-		$result = $item->fill($data)->save();
+        if (empty($data['slug'])) {
+            $data['slug'] = str_slug($data['title'], '-');
+        }
+//		$result = $item->fill($data)->save();
+		$result = $item->update($data);
 		if($result){
 			return redirect()
 				->route('blog.admin.categories.edit', $item->id)
