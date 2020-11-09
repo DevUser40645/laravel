@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Blog\Admin\BaseController;
+use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+//use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends BaseController
 {
@@ -74,8 +76,27 @@ class CategoryController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, $id)
     {
+//        $rules = [
+//            'title'       => 'required|min:5|max:200',
+//            'slug'        => 'max:200',
+//            'description' => 'string|max:500|min:3',
+//            'parent_id'   => 'required|integer|exists:blog_categories,id',
+//        ];
+//        $validateedData = $this->validate($request, $rules); // 1вариант
+//        $validateedData = $request->validate($rules); // 2вариант
+//        $validator = \Validator::make($request->all(), $rules); // 3вариант
+//        $validateedData[] = $validator->passes(); // выполнит проверку и вернет true\false
+//        $validateedData[] = $validator->validate(); // редирект
+//        $validateedData[] = $validator->valid(); // получение валидных данных
+//        $validateedData[] = $validator->failed(); // данные в которых ошибка
+//        $validateedData[] = $validator->errors(); // ошибки в данных
+//        $validateedData[] = $validator->fails(); // true\false
+//        dd($validateedData);
+
+
+
 		$item = BlogCategory::find($id);
 		if(empty($item)){
 			return back()
