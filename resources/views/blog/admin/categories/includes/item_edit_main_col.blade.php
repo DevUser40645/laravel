@@ -36,9 +36,11 @@
                                         class="form-control"
                                         placeholder="Choose category
                                         required">
-                                    @foreach($categoryList as $category)
-                                        <option value="{{ $category->id }}" @if($category->id == $item->parent_id) selected @endif>
-                                            {{ $category->id }}. {{ $category->title }}
+                                    @foreach($categoryList as $categoryOption)
+                                        <option value="{{ $categoryOption->id }}"
+                                                @if($categoryOption->id == $item->parent_id) selected @endif>
+                                            {{--{{ $category->id }}. {{ $category->title }}--}}
+                                            {{ $categoryOption->id_title }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -6,9 +6,29 @@ use App\Http\Controllers\Blog\Admin\BaseController;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Models\BlogCategory;
+use App\Repositories\BlogCategoryRepository;
 
+/**
+ * Class CategoryController
+ *
+ * Управление категориями блога
+ *
+ * @package App\Http\Controllers\Blog\Admin
+ */
 class CategoryController extends BaseController
 {
+    /**
+     * @var BlogCategoryRepository
+     */
+    private $blogCategoryRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +36,8 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginator = BlogCategory::paginate(15);
+//        $paginator = BlogCategory::paginate(15);
+        $paginator = $this->blogCategoryRepository->getAllWithPaginate(15);
         return view('blog.admin.categories.index',
             compact('paginator'));
     }
@@ -29,7 +50,8 @@ class CategoryController extends BaseController
     public function create()
     {
 		$item = new BlogCategory();
-		$categoryList = BlogCategory::all();
+//		$categoryList = BlogCategory::all();
+		$categoryList = $this->blogCategoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit',
             compact('item', 'categoryList'));
@@ -45,7 +67,7 @@ class CategoryController extends BaseController
     {
         $data = $request->input();
         if (empty($data['slug'])) {
-            $data['slug'] = str_slug($data['title'], '-');
+            $data['slug'] = str_slug($data['title']);
         }
 
         // создаст объект, но не добавит в бд - 1 способ
@@ -79,17 +101,30 @@ class CategoryController extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
+//    public function edit($id)
+//    {
+////		$item = BlogCategory::find($id);
+////		$item = BlogCategory::where('id', '<=>', $id)->first();
+////		$item = BlogCategory::where('id', $id)->get(); // get collection
+//		$item = BlogCategory::findOrFail($id);
+//		$categoryList = BlogCategory::all();
+//
+//		return view('blog.admin.categories.edit',compact('item', 'categoryList'));
+//    }
     public function edit($id)
     {
-//		$item = BlogCategory::find($id);
-//		$item = BlogCategory::where('id', '<=>', $id)->first();
-//		$item = BlogCategory::where('id', $id)->get(); // get collection
-		$item = BlogCategory::findOrFail($id);
-		$categoryList = BlogCategory::all();
-		
-		return view('blog.admin.categories.edit',compact('item', 'categoryList'));
+
+        $item = $this->blogCategoryRepository->getEdit($id);
+        if(empty($item)){
+            abort(404);
+        }
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
+
+        return view('blog.admin.categories.edit',
+            compact('item', 'categoryList'));
     }
 
     /**
@@ -118,7 +153,8 @@ class CategoryController extends BaseController
 //        $validateedData[] = $validator->fails(); // true\false
 //        dd($validateedData);
 
-		$item = BlogCategory::find($id);
+//		$item = BlogCategory::find($id);
+		$item = $this->blogCategoryRepository->getEdit($id);
 
 		if(empty($item)){
 			return back()
