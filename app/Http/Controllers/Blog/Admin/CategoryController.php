@@ -83,7 +83,6 @@ class CategoryController extends BaseController
 				->withInput();
 		}
 		$data = $request->all();
-		dd(__METHOD__);
 		$result = $item->fill($data)->save();
 		if($result){
 			return redirect()
