@@ -1,12 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Blog;
+namespace App\Http\Controllers\Blog\Admin;
 
-use App\Models\BlogPost;
+use App\Repositories\BlogPostRepository;
 use Illuminate\Http\Request;
 
+/**
+ * Class PostController
+ * Управление статьями блога
+ *
+ * @package App\Http\Controllers\Blog\Admin
+ */
 class PostController extends BaseController
 {
+    /**
+     * @var BlogPostRepository
+     */
+    private $blogPostRepository;
+
+    /**
+     * PostController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->blogPostRepository = app(BlogPostRepository::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +35,9 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $items = BlogPost::all();
-        return view('blog.posts.index', compact('items'));
+        $paginator = $this->blogPostRepository->getAllWithPaginate(25);
+        return view('blog.admin.posts.index',
+            compact('paginator'));
     }
 
     /**
@@ -25,7 +47,7 @@ class PostController extends BaseController
      */
     public function create()
     {
-        //
+        dd(__METHOD__);
     }
 
     /**
@@ -36,7 +58,7 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        dd(__METHOD__);
     }
 
     /**
@@ -58,7 +80,7 @@ class PostController extends BaseController
      */
     public function edit($id)
     {
-        //
+        dd(__METHOD__, $id);
     }
 
     /**
@@ -70,7 +92,7 @@ class PostController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        dd(__METHOD__, $request->all(), $id);
     }
 
     /**
@@ -81,6 +103,6 @@ class PostController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        dd(__METHOD__, $id);
     }
 }
